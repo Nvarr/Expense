@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nintyseven/model/expense.dart';
 import 'package:nintyseven/widgets/expenses_list/expenses_item.dart';
@@ -23,20 +26,40 @@ class _NewExpenseState extends State<NewExpense> {
     if (_titleController.text.trim().isEmpty ||
         amountIsInvalid ||
         _selectedDate == null) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('هەڵەیەک ڕوویدا'),
-          content: Text('دڵنیا بەرەوە کە بە جوانی بۆشاییەکانت پڕ کردۆتەوە'),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(ctx);
-                },
-                child: const Text('Ok'))
-          ],
-        ),
-      );
+      if (Platform.isIOS) // to see if its an ios or android
+      {
+        showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: const Text('هەڵەیەک ڕوویدا'),
+            content: Text('دڵنیا بەرەوە کە بە جوانی بۆشاییەکانت پڕ کردۆتەوە'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    //one one
+                  },
+                  child: const Text('Ok'))
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('هەڵەیەک ڕوویدا'),
+            content: Text('دڵنیا بەرەوە کە بە جوانی بۆشاییەکانت پڕ کردۆتەوە'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                  },
+                  child: const Text('Ok'))
+            ],
+          ),
+        );
+      }
+
       return;
     } else {
       widget.onAddExpense(Expense(
